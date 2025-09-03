@@ -1,0 +1,31 @@
+{
+  "name": "store-ratings-server",
+  "version": "1.0.0",
+  "description": "Store Rating System Backend API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "build": "echo 'No build step needed for Node.js server'",
+    "db:init": "node scripts/init-db.js"
+  },
+  "keywords": ["store", "ratings", "api", "express", "postgresql"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.3",
+    "dotenv": "^16.3.1",
+    "express-rate-limit": "^7.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

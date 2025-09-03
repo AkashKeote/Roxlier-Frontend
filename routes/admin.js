@@ -458,4 +458,61 @@ router.get('/stores', async (req, res) => {
   }
 });
 
+// Get user's ratings (admin endpoint)
+router.get('/users/:userId/ratings', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { 
+      sortBy = 'created_at', 
+      sortOrder = 'desc',
+      page = 1,
+      limit = 20
+    } = req.query;
+
+    // Validate sort parameters
+    const allowedSortFields = ['rating', 'created_at', 'store_name'];
+    const allowedSortOrders = ['asc', 'desc'];
+    
+    if (!allowedSortFields.includes(sortBy)) sortBy = 'created_at';
+    if (!allowedSortOrders.includes(sortOrder.toLowerCase())) sortOrder = 'desc';
+
+    // Get total count
+    const countResult = await pool.query(`
+      SELECT COUNT(*) FROM ratings WHERE user_id = $1
+    `, [userId]);
+    const totalRatings = parseInt(countResult.rows[0].count);
+
+    // Calculate pagination
+    const offset = (page - 1) * limit;
+    const totalPages = Math.ceil(totalRatings / limit);
+
+    // Get ratings with store details and pagination
+    const ratingsQuery = `
+      SELECT r.id, r.rating, r.comment, r.created_at, r.updated_at,
+             s.id as store_id, s.name as store_name, s.address as store_address
+      FROM ratings r
+      JOIN stores s ON r.store_id = s.id
+      WHERE r.user_id = $1
+      ORDER BY ${sortBy === 'store_name' ? 's.name' : sortBy} ${sortOrder.toUpperCase()}
+      LIMIT $2 OFFSET $3
+    `;
+    
+    const ratingsResult = await pool.query(ratingsQuery, [userId, parseInt(limit), offset]);
+
+    res.json({
+      ratings: ratingsResult.rows,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalRatings,
+        limit: parseInt(limit)
+      }
+    });
+
+  } catch (error) {
+    console.error('User ratings fetch error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 module.exports = router;

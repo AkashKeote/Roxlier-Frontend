@@ -33,10 +33,14 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CORS configuration
+// CORS configuration - Allow Firebase hosting domain
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? [process.env.CLIENT_URL || 'https://your-app-name.railway.app'] 
+    ? [
+        process.env.CLIENT_URL || 'https://roxlier.web.app',
+        'https://roxlier.web.app',
+        'https://roxlier.firebaseapp.com'
+      ] 
     : ['http://localhost:3000'],
   credentials: true
 }));

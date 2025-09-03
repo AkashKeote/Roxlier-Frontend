@@ -12,7 +12,7 @@ const ratingRoutes = require('./routes/ratings');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 // Set environment (will be overridden by Railway)
 if (!process.env.NODE_ENV) {
@@ -90,4 +90,5 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 Health check: http://0.0.0.0:${PORT}/api/health`);
   console.log(`🌐 Railway URL: https://roxlier-backend.up.railway.app`);
+  console.log(`🔌 Railway expects port: 8080`);
 });

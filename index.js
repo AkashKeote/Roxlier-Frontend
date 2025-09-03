@@ -33,13 +33,14 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CORS configuration - Allow Firebase hosting domain
+// CORS configuration - Allow Firebase hosting domain and Vercel
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? [
         process.env.CLIENT_URL || 'https://roxlier.web.app',
         'https://roxlier.web.app',
-        'https://roxlier.firebaseapp.com'
+        'https://roxlier.firebaseapp.com',
+        'https://roxlier1.vercel.app'
       ] 
     : ['http://localhost:3000'],
   credentials: true
